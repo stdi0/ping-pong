@@ -36,14 +36,8 @@ def update_score(player):
 def goal_checking():
     if canv.coords(BALL)[1] <= 0:
         update_score('first')
-        #score_p += 1
-        #canv.itemconfig(score_block_p, text=str(score_p))
-        #canv.coords(BALL,140,340,160,360)
     if canv.coords(BALL)[3] >= HEIGHT:
         update_score('second')
-        #score_c += 1
-        #canv.itemconfig(score_block_c, text=str(score_c))
-        #canv.coords(BALL,140,340,160,360)     
 
 
 def go():
@@ -64,15 +58,11 @@ def go():
     canv.after(30,go)
 
 def move(event):
-    print(event.keysym)
-    #if event.state == 'KeyRelease':
-    #    pass
-    #else:    
-    #    print(event.keysym)
     if event.keysym == 'Right' and canv.coords(PADDLE_P)[2] < WIDTH:
             canv.move(PADDLE_P,10,0)
     if event.keysym == 'Left' and canv.coords(PADDLE_P)[0] > 0:
             canv.move(PADDLE_P,-10,0)
+    #The second player        
     if event.keysym == 'd' and canv.coords(PADDLE_C)[2] < WIDTH:
             canv.move(PADDLE_C,10,0)
     if event.keysym == 'a' and canv.coords(PADDLE_C)[0] > 0:
@@ -95,12 +85,12 @@ BALL = canv.create_oval([140,340],[160,360], fill="white")
 score_block_c = canv.create_text(30,HEIGHT/2/2, text="0", font="Verdana 12", fill="white")
 score_block_p = canv.create_text(30,HEIGHT/2+HEIGHT/2/2, text="0", font="Verdana 12", fill="white")
 
+#root.bind("<KeyPress>", move)
 root.bind("<Right>", move)
 root.bind("<Left>", move)
 #The second player
 root.bind("<a>", move)
 root.bind("<d>", move)
-
 
 x = 4 #angle
 y = 6 #speed
@@ -109,3 +99,7 @@ score_p = 0
 go()
 
 root.mainloop()
+
+if __name__ == "__main__":
+    go()
+
