@@ -49,10 +49,10 @@ def go():
 
     #AI:
     #if canv.coords(BALL)[1] <= HEIGHT / 2:
-    #if (canv.coords(PADDLE_C)[2] - canv.coords(PADDLE_C)[0]) / 2 + canv.coords(PADDLE_C)[0] < (canv.coords(BALL)[2] - canv.coords(BALL)[0])  / 2 + canv.coords(BALL)[0] and canv.coords(PADDLE_C)[2] < WIDTH:
-    #        canv.move(PADDLE_C,3,0)
-    #if (canv.coords(PADDLE_C)[2] - canv.coords(PADDLE_C)[0]) / 2 + canv.coords(PADDLE_C)[0] > (canv.coords(BALL)[2] - canv.coords(BALL)[0])  / 2 + canv.coords(BALL)[0] and canv.coords(PADDLE_C)[0] > 0:
-    #        canv.move(PADDLE_C,-3,0)    
+    if (canv.coords(PADDLE_C)[2] - canv.coords(PADDLE_C)[0]) / 2 + canv.coords(PADDLE_C)[0] < (canv.coords(BALL)[2] - canv.coords(BALL)[0])  / 2 + canv.coords(BALL)[0] and canv.coords(PADDLE_C)[2] < WIDTH:
+        canv.move(PADDLE_C,3,0)
+    if (canv.coords(PADDLE_C)[2] - canv.coords(PADDLE_C)[0]) / 2 + canv.coords(PADDLE_C)[0] > (canv.coords(BALL)[2] - canv.coords(BALL)[0])  / 2 + canv.coords(BALL)[0] and canv.coords(PADDLE_C)[0] > 0:
+        canv.move(PADDLE_C,-3,0)    
 
     canv.move(BALL,x,y)
     canv.after(30,go)
@@ -63,10 +63,10 @@ def move(event):
     if event.keysym == 'Left' and canv.coords(PADDLE_P)[0] > 0:
             canv.move(PADDLE_P,-10,0)
     #The second player        
-    if event.keysym == 'd' and canv.coords(PADDLE_C)[2] < WIDTH:
-            canv.move(PADDLE_C,10,0)
-    if event.keysym == 'a' and canv.coords(PADDLE_C)[0] > 0:
-            canv.move(PADDLE_C,-10,0)        
+    #if event.keysym == 'd' and canv.coords(PADDLE_C)[2] < WIDTH:
+    #        canv.move(PADDLE_C,10,0)
+    #if event.keysym == 'a' and canv.coords(PADDLE_C)[0] > 0:
+    #        canv.move(PADDLE_C,-10,0)        
 
 
 root = Tk()
@@ -85,12 +85,13 @@ BALL = canv.create_oval([140,340],[160,360], fill="white")
 score_block_c = canv.create_text(30,HEIGHT/2/2, text="0", font="Verdana 12", fill="white")
 score_block_p = canv.create_text(30,HEIGHT/2+HEIGHT/2/2, text="0", font="Verdana 12", fill="white")
 
-#root.bind("<KeyPress>", move)
-root.bind("<Right>", move)
-root.bind("<Left>", move)
+root.bind("<KeyPress>", move)
+#root.bind("<Right>", move)
+#root.bind("<Left>", move)
 #The second player
-root.bind("<a>", move)
-root.bind("<d>", move)
+#root.bind("<a>", move)
+#root.bind("<d>", move)
+
 
 x = 4 #angle
 y = 6 #speed
