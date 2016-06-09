@@ -2,105 +2,104 @@
 from tkinter import *
 from time import sleep
 
-
 WIDTH = 300
 HEIGHT = 700
 PADDLE_W = 50
 PADDLE_H = 15
 
-def collision_checking():
-    global x, y
-    if canv.coords(BALL)[3] >= HEIGHT-PADDLE_H and canv.coords(PADDLE_P)[0] <= (canv.coords(BALL)[2] - canv.coords(BALL)[0])  / 2 + canv.coords(BALL)[0] <= canv.coords(PADDLE_P)[2]:
-        y = -6
-    if canv.coords(BALL)[1] <= PADDLE_H and canv.coords(PADDLE_C)[0] <= (canv.coords(BALL)[2] - canv.coords(BALL)[0])  / 2 + canv.coords(BALL)[0] <= canv.coords(PADDLE_C)[2]:
-        y = 6
-    if canv.coords(BALL)[2] == WIDTH:
-        x = -4
-    if canv.coords(BALL)[0] == 0: 
-        x = 4
+class PingPongGame:
+    x = 4 #angle
+    y = 6 #speed
+    score_c = 0
+    score_p = 0
+    root = Tk()
+    canv = Canvas(root, width = WIDTH, height = HEIGHT, background="#003300")
+    PADDLE_C = None
+    PADDLE_P = None
+    BALL = None
+    score_block_c = None
+    score_block_p = None
 
-def spawn_ball():
-    canv.coords(BALL,140,340,160,360)
-
-def update_score(player):
-    global score_c, score_p
-    if player == 'second':
-        score_c += 1
-        canv.itemconfig(score_block_c, text=str(score_c))
-        spawn_ball()
-    if player == 'first':
-        score_p += 1
-        canv.itemconfig(score_block_p, text=str(score_p))
-        spawn_ball()
-
-def goal_checking():
-    if canv.coords(BALL)[1] <= 0:
-        update_score('first')
-    if canv.coords(BALL)[3] >= HEIGHT:
-        update_score('second')
-
-
-def go():
-    #Collision checking
-    #Сhecking on the goal
-    global x, y
-    collision_checking()
-    goal_checking()
-
-    #AI:
-    #if canv.coords(BALL)[1] <= HEIGHT / 2:
-    if (canv.coords(PADDLE_C)[2] - canv.coords(PADDLE_C)[0]) / 2 + canv.coords(PADDLE_C)[0] < (canv.coords(BALL)[2] - canv.coords(BALL)[0])  / 2 + canv.coords(BALL)[0] and canv.coords(PADDLE_C)[2] < WIDTH:
-        canv.move(PADDLE_C,3,0)
-    if (canv.coords(PADDLE_C)[2] - canv.coords(PADDLE_C)[0]) / 2 + canv.coords(PADDLE_C)[0] > (canv.coords(BALL)[2] - canv.coords(BALL)[0])  / 2 + canv.coords(BALL)[0] and canv.coords(PADDLE_C)[0] > 0:
-        canv.move(PADDLE_C,-3,0)    
-
-    canv.move(BALL,x,y)
-    canv.after(30,go)
-
-def move(event):
-    if event.keysym == 'Right' and canv.coords(PADDLE_P)[2] < WIDTH:
-            canv.move(PADDLE_P,10,0)
-    if event.keysym == 'Left' and canv.coords(PADDLE_P)[0] > 0:
-            canv.move(PADDLE_P,-10,0)
+    def move(self, event):
+        if event.keysym == 'Right' and self.canv.coords(self.PADDLE_P)[2] < WIDTH:
+                self.canv.move(self.PADDLE_P,10,0)
+        if event.keysym == 'Left' and self.canv.coords(self.PADDLE_P)[0] > 0:
+                self.canv.move(self.PADDLE_P,-10,0)
+         
     #The second player        
     #if event.keysym == 'd' and canv.coords(PADDLE_C)[2] < WIDTH:
     #        canv.move(PADDLE_C,10,0)
     #if event.keysym == 'a' and canv.coords(PADDLE_C)[0] > 0:
     #        canv.move(PADDLE_C,-10,0)        
 
+    def __init__(self):
 
-root = Tk()
-canv = Canvas(root, width = WIDTH, height = HEIGHT, background="#003300")
-canv.pack()
+        self.canv.pack()
 
+        self.canv.create_line(0,HEIGHT/2,WIDTH,HEIGHT/2, width=3, fill="white")
+        self.canv.create_line(0,HEIGHT-PADDLE_H,WIDTH,HEIGHT-PADDLE_H, width=1, fill="white")
+        self.canv.create_line(0,PADDLE_H,WIDTH,PADDLE_H, width=1, fill="white")
 
-canv.create_line(0,HEIGHT/2,WIDTH,HEIGHT/2, width=3, fill="white")
-canv.create_line(0,HEIGHT-PADDLE_H,WIDTH,HEIGHT-PADDLE_H, width=1, fill="white")
-canv.create_line(0,PADDLE_H,WIDTH,PADDLE_H, width=1, fill="white")
+        self.PADDLE_C = self.canv.create_rectangle(0,0,PADDLE_W,PADDLE_H, fill="White", outline="white")
+        self.PADDLE_P = self.canv.create_rectangle(0,HEIGHT-PADDLE_H,PADDLE_W,HEIGHT, fill="White", outline="white")
+        self.BALL = self.canv.create_oval([140,340],[160,360], fill="white")
 
-PADDLE_C = canv.create_rectangle(0,0,PADDLE_W,PADDLE_H, fill="White", outline="white")
-PADDLE_P = canv.create_rectangle(0,HEIGHT-PADDLE_H,PADDLE_W,HEIGHT, fill="White", outline="white")
-BALL = canv.create_oval([140,340],[160,360], fill="white")
+        self.score_block_c = self.canv.create_text(30,HEIGHT/2/2, text="0", font="Verdana 12", fill="white")
+        self.score_block_p = self.canv.create_text(30,HEIGHT/2+HEIGHT/2/2, text="0", font="Verdana 12", fill="white")
 
-score_block_c = canv.create_text(30,HEIGHT/2/2, text="0", font="Verdana 12", fill="white")
-score_block_p = canv.create_text(30,HEIGHT/2+HEIGHT/2/2, text="0", font="Verdana 12", fill="white")
+        self.root.bind("<KeyPress>", self.move) 
 
-root.bind("<KeyPress>", move)
-#root.bind("<Right>", move)
-#root.bind("<Left>", move)
-#The second player
-#root.bind("<a>", move)
-#root.bind("<d>", move)
+    def collision_checking(self):
+        if self.canv.coords(self.BALL)[3] >= HEIGHT-PADDLE_H and self.canv.coords(self.PADDLE_P)[0] <= (self.canv.coords(self.BALL)[2] - self.canv.coords(self.BALL)[0])  / 2 + self.canv.coords(self.BALL)[0] <= self.canv.coords(self.PADDLE_P)[2]:
+            self.y = -6
+        if self.canv.coords(self.BALL)[1] <= PADDLE_H and self.canv.coords(self.PADDLE_C)[0] <= (self.canv.coords(self.BALL)[2] - self.canv.coords(self.BALL)[0])  / 2 + self.canv.coords(self.BALL)[0] <= self.canv.coords(self.PADDLE_C)[2]:
+            self.y = 6
+        if self.canv.coords(self.BALL)[2] == WIDTH:
+            self.x = -4
+        if self.canv.coords(self.BALL)[0] == 0: 
+            self.x = 4
 
+    def spawn_ball(self):
+        self.canv.coords(self.BALL,140,340,160,360)
 
-x = 4 #angle
-y = 6 #speed
-score_c = 0
-score_p = 0
-go()
+    def update_score(self, player):
+        if player == 'second':
+            self.score_c += 1
+            self.canv.itemconfig(self.score_block_c, text=str(self.score_c))
+            self.spawn_ball()
+        if player == 'first':
+            self.score_p += 1
+            self.canv.itemconfig(self.score_block_p, text=str(self.score_p))
+            self.spawn_ball()
 
-root.mainloop()
+    def goal_checking(self):
+        if self.canv.coords(self.BALL)[1] <= 0:
+            self.update_score('first')
+        if self.canv.coords(self.BALL)[3] >= HEIGHT:
+            self.update_score('second')
 
-if __name__ == "__main__":
-    go()
+    def go(self):
+        #Collision checking
+        #Сhecking on the goal
+        self.collision_checking()
+        self.goal_checking()
+
+        #AI:
+        #if canv.coords(BALL)[1] <= HEIGHT / 2:
+        if (self.canv.coords(self.PADDLE_C)[2] - self.canv.coords(self.PADDLE_C)[0]) / 2 + self.canv.coords(self.PADDLE_C)[0] < (self.canv.coords(self.BALL)[2] - self.canv.coords(self.BALL)[0])  / 2 + self.canv.coords(self.BALL)[0] and self.canv.coords(self.PADDLE_C)[2] < WIDTH:
+            self.canv.move(self.PADDLE_C,3,0)
+        if (self.canv.coords(self.PADDLE_C)[2] - self.canv.coords(self.PADDLE_C)[0]) / 2 + self.canv.coords(self.PADDLE_C)[0] > (self.canv.coords(self.BALL)[2] - self.canv.coords(self.BALL)[0])  / 2 + self.canv.coords(self.BALL)[0] and self.canv.coords(self.PADDLE_C)[0] > 0:
+            self.canv.move(self.PADDLE_C,-3,0)    
+
+        self.canv.move(self.BALL,self.x,self.y)
+        self.canv.after(30,self.go)
+       
+
+newgame = PingPongGame()
+newgame.go()
+
+newgame.root.mainloop()
+
+#if __name__ == "__main__":
+#    newgame.go()
 
