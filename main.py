@@ -25,7 +25,7 @@ class PingPongGame:
                 self.canv.move(self.PADDLE_P,10,0)
         if event.keysym == 'Left' and self.canv.coords(self.PADDLE_P)[0] > 0:
                 self.canv.move(self.PADDLE_P,-10,0)
-         
+
     #The second player        
     #if event.keysym == 'd' and canv.coords(PADDLE_C)[2] < WIDTH:
     #        canv.move(PADDLE_C,10,0)
@@ -100,6 +100,6 @@ newgame.go()
 
 newgame.root.mainloop()
 
-#if __name__ == "__main__":
-#    newgame.go()
+if __name__ == "__main__":
+    newgame.go()
 
