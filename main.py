@@ -12,13 +12,6 @@ class PingPongGame:
     y = 6 #speed
     score_c = 0
     score_p = 0
-    root = Tk()
-    canv = Canvas(root, width = WIDTH, height = HEIGHT, background="#003300")
-    PADDLE_C = None
-    PADDLE_P = None
-    BALL = None
-    score_block_c = None
-    score_block_p = None
 
     def move(self, event):
         if event.keysym == 'Right' and self.canv.coords(self.PADDLE_P)[2] < WIDTH:
@@ -34,8 +27,12 @@ class PingPongGame:
 
     def __init__(self):
 
+        self.canv = Canvas(root, width = WIDTH, height = HEIGHT, background="#003300")
         self.canv.pack()
 
+        self.im ='/Users/irina_dashevskaya/project/example.gif'
+        self.ph_im = PhotoImage(file=self.im)
+        self.canv.create_image(1,1,anchor=NW,image=self.ph_im)
         self.canv.create_line(0,HEIGHT/2,WIDTH,HEIGHT/2, width=3, fill="white")
         self.canv.create_line(0,HEIGHT-PADDLE_H,WIDTH,HEIGHT-PADDLE_H, width=1, fill="white")
         self.canv.create_line(0,PADDLE_H,WIDTH,PADDLE_H, width=1, fill="white")
@@ -47,7 +44,8 @@ class PingPongGame:
         self.score_block_c = self.canv.create_text(30,HEIGHT/2/2, text="0", font="Verdana 12", fill="white")
         self.score_block_p = self.canv.create_text(30,HEIGHT/2+HEIGHT/2/2, text="0", font="Verdana 12", fill="white")
 
-        self.root.bind("<KeyPress>", self.move) 
+        root.bind("<KeyPress>", self.move)
+
 
     def collision_checking(self):
         if self.canv.coords(self.BALL)[3] >= HEIGHT-PADDLE_H and self.canv.coords(self.PADDLE_P)[0] <= (self.canv.coords(self.BALL)[2] - self.canv.coords(self.BALL)[0])  / 2 + self.canv.coords(self.BALL)[0] <= self.canv.coords(self.PADDLE_P)[2]:
@@ -94,11 +92,10 @@ class PingPongGame:
         self.canv.move(self.BALL,self.x,self.y)
         self.canv.after(30,self.go)
        
-
+root = Tk()
 newgame = PingPongGame()
 newgame.go()
-
-newgame.root.mainloop()
+root.mainloop()
 
 if __name__ == "__main__":
     newgame.go()
